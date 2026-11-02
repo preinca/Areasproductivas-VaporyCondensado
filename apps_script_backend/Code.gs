@@ -1,15 +1,15 @@
 /**
  * BACKEND INDEPENDIENTE — CHECKLIST VAPOR Y CONDENSADO
  * Google Sheet exclusiva: Base_Maestra_Checklist_Vapor_Condensado
- * REQUIERE Script Properties: READ_KEY (consulta) y WRITE_KEY (cargas)
+ * REQUIERE Script Properties: WRITE_KEY (cargas)
  * DESPLIEGUE: Web app, ejecutar como propietario; conceder acceso solo conforme
  * a la política de acceso de la organización.
  *
- * IMPORTANTE: con acceso público al Web App, la lectura GET será pública.
- * Para operar datos sensibles se debe proteger el acceso mediante login o
- * política de autenticación aprobada por la organización.
+ * IMPORTANTE: las consultas de registros están abiertas mediante POST.
+ * Cuando el Web App es público, cualquier persona que conozca el endpoint
+ * puede consultar el historial. No publicar información confidencial.
  */
-const VC_VERSION = 'VC-1.1-2026-11-02';
+const VC_VERSION = 'VC-1.2-2026-11-02';
 const VC_SHEET_ID = '1wk8lgVDfJdKgTKo0ZGznBBhVw_pmPmu30r41G5aA9FY';
 const VC_TAB = 'LISTA_VERIFICADOS';
 const VC_HEADERS = [
@@ -52,8 +52,8 @@ function vcFrame_(result,nonce,origin){
   return HtmlService.createHtmlOutput(html).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 function doGet(e){
-  // Nunca devolver registros mediante GET / JSONP, incluso si el Web App es público.
-  return vcJson_({ok:true,service:'Checklist Vapor y Condensado',version:VC_VERSION,readProtected:true});
+  // GET solo informa del estado; los registros se consultan mediante POST.
+  return vcJson_({ok:true,service:'Checklist Vapor y Condensado',version:VC_VERSION,readProtected:false});
 }
 function vcAuthorized_(key,propertyName){
   const expected=PropertiesService.getScriptProperties().getProperty(propertyName);
@@ -96,7 +96,6 @@ function doPost(e){
   try{
     const body=JSON.parse(p.payload||(e&&e.postData&&e.postData.contents)||'{}');
     if(body.action==='read_verified'){
-      vcAuthorized_(body.key,'READ_KEY');
       result=vcData_();
     }else if(body.action==='upsert_verified'){
       vcAuthorized_(body.key,'WRITE_KEY');
@@ -106,14 +105,12 @@ function doPost(e){
   return p.nonce?vcFrame_(result,p.nonce,p.origin):vcJson_(result);
 }
 
-/** Ejecutar una vez desde el editor: valida permisos, hoja y claves sin escribir registros. */
+/** Ejecutar desde el editor: valida la hoja y la clave de escritura sin escribir registros. */
 function validarConfiguracion(){
-  const props=PropertiesService.getScriptProperties();
-  const read=props.getProperty('READ_KEY')||'',write=props.getProperty('WRITE_KEY')||'';
-  if(read.length<16||write.length<16)throw Error('Configure READ_KEY y WRITE_KEY, cada una con al menos 16 caracteres.');
-  if(read===write)throw Error('READ_KEY y WRITE_KEY deben ser diferentes.');
+  const write=PropertiesService.getScriptProperties().getProperty('WRITE_KEY')||'';
+  if(write.length<16)throw Error('Configure WRITE_KEY con al menos 16 caracteres.');
   const sheet=vcSheet_();
-  const result={ok:true,version:VC_VERSION,tab:sheet.getName(),registros:Math.max(0,sheet.getLastRow()-1),clavesConfiguradas:true};
+  const result={ok:true,version:VC_VERSION,tab:sheet.getName(),registros:Math.max(0,sheet.getLastRow()-1),claveEscrituraConfigurada:true,lecturaSinClave:true};
   Logger.log(JSON.stringify(result));
   return result;
 }
