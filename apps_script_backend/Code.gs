@@ -57,7 +57,7 @@ function doGet(e){
 }
 function vcAuthorized_(key,propertyName){
   const expected=PropertiesService.getScriptProperties().getProperty(propertyName);
-  if(!expected||String(expected).length<16)throw Error('La propiedad '+propertyName+' no está configurada (mínimo 16 caracteres).');
+  if(!expected||String(expected).length<8)throw Error('La propiedad '+propertyName+' no está configurada (mínimo 8 caracteres).');
   if(!key||String(key)!==expected)throw Error(propertyName==='READ_KEY'?'Clave de consulta incorrecta.':'Clave de actualización incorrecta.');
 }
 function vcSafeValue_(v){
@@ -108,7 +108,7 @@ function doPost(e){
 /** Ejecutar desde el editor: valida la hoja y la clave de escritura sin escribir registros. */
 function validarConfiguracion(){
   const write=PropertiesService.getScriptProperties().getProperty('WRITE_KEY')||'';
-  if(write.length<16)throw Error('Configure WRITE_KEY con al menos 16 caracteres.');
+  if(write.length<8)throw Error('Configure WRITE_KEY con al menos 8 caracteres.');
   const sheet=vcSheet_();
   const result={ok:true,version:VC_VERSION,tab:sheet.getName(),registros:Math.max(0,sheet.getLastRow()-1),claveEscrituraConfigurada:true,lecturaSinClave:true};
   Logger.log(JSON.stringify(result));
