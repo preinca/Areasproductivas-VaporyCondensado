@@ -25,7 +25,7 @@
     <div class="sidebar-bottom">Sistema independiente<br><strong>Checklist · v1.1</strong></div>
   </aside>
   <main class="main">
-    <header class="topbar"><div><div class="eyebrow">SERVICIOS DE PLANTA / INSPECCIONES</div><h1>Checklist Vapor y Condensado</h1><p>Seguimiento técnico de condiciones, desviaciones y avisos de mantenimiento.</p></div><div class="sync-actions"><span id="sync-status" class="status-pill" aria-live="polite">Sin sincronizar</span><button id="refresh" class="btn muted">↻ Actualizar</button></div></header>
+    <header class="topbar"><div><div class="eyebrow">SERVICIOS DE PLANTA / INSPECCIONES</div><h1>Checklist Vapor y Condensado</h1><p>Seguimiento técnico de condiciones, desviaciones y avisos de mantenimiento.</p></div><div class="sync-actions"><span id="sync-status" class="status-pill" aria-live="polite">Sin sincronizar</span><button id="connect" type="button" style="display:none" tabindex="-1" aria-hidden="true"></button><button id="refresh" class="btn muted">↻ Actualizar</button></div></header>
     <section id="panel" class="content-section" aria-labelledby="panel-title">
       <div class="section-head"><div><h2 id="panel-title">Resumen operacional</h2><p>Indicadores calculados a partir de los registros consultados y sus filtros.</p></div><span class="sync-small" id="last-sync">Sin lectura de datos</span></div>
       <div class="kpis">
@@ -63,5 +63,12 @@
 </div>
 <div id="modal" class="modal" hidden role="dialog" aria-modal="true" aria-label="Vista ampliada"><button class="modal-close" id="modal-close" aria-label="Cerrar foto">×</button><img id="modal-img" alt="Referencia ampliada"><div id="modal-caption"></div></div>
 <div id="toast" role="status" aria-live="polite" hidden></div>
+<script>
+// Solicita acceso de lectura al inicio de la sesión, no al actualizar.
+window.addEventListener("load",function(){
+  var actualizar=document.getElementById("refresh");
+  if(actualizar) actualizar.click();
+});
+</script>
 </body>
 </html>
