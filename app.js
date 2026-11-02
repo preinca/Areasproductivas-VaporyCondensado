@@ -123,7 +123,6 @@
   function openPhoto(file,label){const modal=$('modal'),img=$('modal-img');img.src=imageSrc(file);img.onerror=()=>{img.onerror=null;img.src=remoteSrc(file)};img.alt=label;$('modal-caption').textContent=label;modal.hidden=false;}
   function closePhoto(){$('modal').hidden=true;$('modal-img').removeAttribute('src');}
   // El navegador conserva SOLO la URL pública del Web App. Nunca guarda contraseñas.
-  let readKey='';
   const API_STORAGE_KEY='vc_checklist_api_url';
   function readStoredURL(){try{return localStorage.getItem(API_STORAGE_KEY)||'';}catch(_){return '';}}
   function saveStoredURL(url){try{localStorage.setItem(API_STORAGE_KEY,url);}catch(_){/* La URL permanece en memoria */}window.CHECKLIST_API_URL=url;}
@@ -160,16 +159,9 @@
     d.addEventListener('cancel',e=>{e.preventDefault();finish('')});
     d.showModal();input.focus();
   });}
-  async function connectionKey(){
-    if(readKey)return readKey;
-    const supplied=await askSecret('Clave de consulta (READ_KEY)');
-    if(!tx(supplied))return '';
-    readKey=supplied;
-    return readKey;
-  }
   // Lectura y escritura por POST de formulario: la clave no se incluye en la URL.
   function sendWithIframe(payload){return new Promise((resolve,reject)=>{
-    const endpoint=apiURL();if(!endpoint){reject(new Error('No se configuró Apps Script. Pulse Conectar.'));return;}
+    const endpoint=apiURL();if(!endpoint){reject(new Error('No se configuró la URL de Apps Script en config.js.'));return;}
     const nonce='vc_post_'+Date.now()+'_'+Math.random().toString(36).slice(2),frame=document.createElement('iframe'),form=document.createElement('form');let done=false;
     frame.name=nonce;frame.hidden=true;frame.setAttribute('aria-hidden','true');
     form.action=endpoint;form.method='POST';form.target=nonce;form.style.display='none';
@@ -187,27 +179,17 @@
     window.addEventListener('message',receive);document.body.append(frame,form);form.submit();
   });}
   async function refresh(){
-    try{if(!ensureURL())return;if(!(await connectionKey()))return;}
+    try{if(!ensureURL())return;}
     catch(e){toast(e.message);return;}
-    status('Sincronizando...');$('refresh').disabled=true;$('connect').disabled=true;
+    status('Sincronizando...');$('refresh').disabled=true;
     try{
-      const ans=await sendWithIframe({action:'read_verified',key:readKey});
+      const ans=await sendWithIframe({action:'read_verified'});
       data=(ans.rows||[]).map(normalizeRow).filter(r=>r.Fecha&&r['Área']&&r['Punto / Equipo']);
       lastSync=new Date().toLocaleString('es-VE');status(`${data.length} registros cargados`,'success');page=1;render();
     }catch(e){
-      if(/Clave de consulta incorrecta/.test(e.message))readKey='';
+
       status('Error de conexión','error');toast(e.message);console.error(e);
-    }finally{$('refresh').disabled=false;$('connect').disabled=false;}
-  }
-  function connect(){refresh();}
-  function configure(){
-    const supplied=prompt('Pegue la URL /exec del Apps Script exclusivo para Vapor y Condensado:',apiURL());
-    if(supplied===null)return;
-    const endpoint=tx(supplied);
-    if(!validateEndpoint(endpoint)){toast('La dirección debe ser https://script.google.com/macros/s/.../exec');return;}
-    saveStoredURL(endpoint);readKey='';data=[];page=1;lastSync='';render();
-    status('URL guardada · Conectar para consultar');
-    toast('Dirección actualizada. Se guarda en este navegador, sin contraseñas.');
+    }finally{$('refresh').disabled=false;}
   }
   function parseWorkbook(wb,fileName){let result=[];
     for(const area of AREAS){const s=wb.SheetNames.find(n=>norm(n)===area);if(!s)continue;
@@ -245,7 +227,8 @@
     $('reference-content').addEventListener('click',e=>{const b=e.target.closest('[data-image-file]');if(b)openPhoto(b.dataset.imageFile,b.dataset.imageLabel);});
     $('modal-close').addEventListener('click',closePhoto);$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closePhoto();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closePhoto();});
     document.querySelectorAll('.nav-item').forEach(link=>link.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));link.classList.add('active');}));
-    status(apiURL()?'Clave de consulta requerida':'Pendiente de conectar');
+    status(apiURL()?'Preparado para sincronizar':'URL de Apps Script pendiente');
+    if(apiURL())refresh();
   }
   document.addEventListener('DOMContentLoaded',init);
 })();
