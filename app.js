@@ -233,7 +233,7 @@
     }catch(err){status('No se confirmó la carga','error');toast(err.message);console.error(err);}finally{e.target.value='';}
   }
   function init(){AREAS.forEach(a=>$('ref-area').add(new Option(a,a)));renderRefChoices(true);render();
-    $('refresh').addEventListener('click',refresh);$('connect').addEventListener('click',connect);$('excel-input').addEventListener('change',upload);
+    $('refresh').addEventListener('click',refresh);$('excel-input').addEventListener('change',upload);
     for(const id of ['filter-area','filter-date','filter-turn','filter-status'])$(id).addEventListener('change',()=>{page=1;render();});
     $('filter-search').addEventListener('input',()=>{page=1;render();});
     $('clear').addEventListener('click',()=>{['filter-area','filter-date','filter-turn','filter-status'].forEach(id=>$(id).value='*');$('filter-search').value='';page=1;render();});
