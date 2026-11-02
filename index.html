@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102e45">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Verificaciones operativas de vapor y condensado, inspecciones y avisos B1.">
+  <title>Checklist Vapor y Condensado | Servicios de Planta</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar" aria-label="Navegación">
+    <div class="brand"><span class="brand-mark">VC</span><span><strong>Vapor &amp; Condensado</strong><small>Control de verificaciones</small></span></div>
+    <div class="side-label">OPERACIÓN</div>
+    <nav>
+      <a class="nav-item active" href="#panel"><span>▣</span> Panel general</a>
+      <a class="nav-item" href="#historico"><span>▤</span> Histórico</a>
+      <a class="nav-item" href="#referencias"><span>▧</span> Referencias visuales</a>
+    </nav>
+    <div class="sidebar-bottom">Sistema independiente<br><strong>Checklist · v1.1</strong></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><div class="eyebrow">SERVICIOS DE PLANTA / INSPECCIONES</div><h1>Checklist Vapor y Condensado</h1><p>Seguimiento técnico de condiciones, desviaciones y avisos de mantenimiento.</p></div><div class="sync-actions"><span id="sync-status" class="status-pill" aria-live="polite">Sin sincronizar</span><button id="configure" class="btn muted" title="Configurar URL de Apps Script">⚙ Configuración</button><button id="connect" class="btn primary">🔒 Conectar</button><button id="refresh" class="btn muted">↻ Actualizar</button></div></header>
+    <section id="panel" class="content-section" aria-labelledby="panel-title">
+      <div class="section-head"><div><h2 id="panel-title">Resumen operacional</h2><p>Indicadores calculados a partir de los registros consultados y sus filtros.</p></div><span class="sync-small" id="last-sync">Sin lectura de datos</span></div>
+      <div class="kpis">
+        <article class="metric"><div class="metric-label">Registros visibles <span>▤</span></div><strong id="kpi-total">0</strong><small>Puntos y equipos inspeccionados</small></article>
+        <article class="metric"><div class="metric-label">Última inspección <span>◷</span></div><strong id="kpi-latest" class="date">—</strong><small id="kpi-latest-detail">Sin información</small></article>
+        <article class="metric alert"><div class="metric-label">Con desviación <span>⚠</span></div><strong id="kpi-issues">0</strong><small>Condiciones fuera de estado OK</small></article>
+        <article class="metric"><div class="metric-label">Avisos B1 <span>♧</span></div><strong id="kpi-b1">0</strong><small>Registros con aviso asociado</small></article>
+      </div>
+      <div class="panel-toolbar card">
+        <div class="toolbar-top"><div><h3>Filtros de verificación</h3><p>Combine área, fecha, turno, estado o texto.</p></div><button class="btn subtle" id="clear">Limpiar filtros</button></div>
+        <div class="filters">
+          <label>Área<select id="filter-area"><option value="*">Todas las áreas</option></select></label>
+          <label>Fecha<select id="filter-date"><option value="*">Todas las fechas</option></select></label>
+          <label>Turno<select id="filter-turn"><option value="*">Todos los turnos</option></select></label>
+          <label>Estado<select id="filter-status"><option value="*">Todos los estados</option><option value="issue">Con desviación</option><option value="ok">Verificado</option><option value="pending">Pendiente</option></select></label>
+          <label class="search-field">Buscar<input id="filter-search" type="search" placeholder="Punto, equipo, aviso, operador..." autocomplete="off"></label>
+        </div>
+      </div>
+      <div id="areas" class="areas" aria-label="Resumen de verificaciones por área"></div>
+    </section>
+    <section id="historico" class="content-section" aria-labelledby="history-title">
+      <div class="section-head"><div><h2 id="history-title">Histórico de verificaciones</h2><p>Registros de Queso, Tomate, Mayonesa, Manifold y Margarina.</p></div><div class="buttons"><a class="btn muted" href="https://drive.google.com/uc?export=download&amp;id=1VNS-xaWU5S11xK4jwd37wh-7jAYgqWLG" target="_blank" rel="noopener noreferrer">↓ Formato Excel</a><label class="btn primary upload" for="excel-input">↑ Cargar checklist</label><input id="excel-input" type="file" accept=".xlsx,.xls" hidden></div></div>
+      <div class="card history-card">
+        <div class="history-head"><strong id="history-count">0 registros</strong><span class="legend"><i class="dot good"></i> Verificado <i class="dot issue"></i> Desviación <i class="dot pending"></i> Pendiente</span></div>
+        <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Turno</th><th>Área</th><th>Punto / Equipo</th><th>Condición fuga</th><th>By pass</th><th>Manómetros</th><th>Aislamiento</th><th>Seguridad</th><th>Aviso B1</th><th>Observación</th><th>Supervisor</th><th>Operador</th></tr></thead><tbody id="history-body"><tr><td colspan="13" class="empty">Sin registros cargados.</td></tr></tbody></table></div>
+        <div class="pager"><span id="page-meta">0–0 de 0</span><div><button id="prev-page" class="btn subtle">← Anteriores</button><select id="page-select" aria-label="Página del histórico"></select><button id="next-page" class="btn subtle">Siguientes →</button></div></div>
+      </div>
+    </section>
+    <section id="referencias" class="content-section" aria-labelledby="reference-title">
+      <div class="section-head"><div><h2 id="reference-title">Referencias visuales</h2><p>Identifique la ubicación del punto a verificar mediante los diagramas y fotografías.</p></div></div>
+      <div class="card reference-card"><div class="filters ref-filters"><label>Área<select id="ref-area"></select></label><label>Punto / equipo<select id="ref-point"></select></label><label>Vista<select id="ref-mode"><option value="point">Punto / equipo</option><option value="area">Todas las fotos del área</option><option value="hide">Ocultar referencias</option></select></label></div><div id="reference-content" class="reference-content"></div></div>
+    </section>
+    <footer>Checklist Vapor y Condensado · Registro histórico en Google Sheets independiente</footer>
+  </main>
+</div>
+<div id="modal" class="modal" hidden role="dialog" aria-modal="true" aria-label="Vista ampliada"><button class="modal-close" id="modal-close" aria-label="Cerrar foto">×</button><img id="modal-img" alt="Referencia ampliada"><div id="modal-caption"></div></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
