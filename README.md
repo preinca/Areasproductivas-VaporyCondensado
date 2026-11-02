@@ -17,7 +17,7 @@ Aplicación independiente del dashboard de Servicios de Planta, creada con HTML,
 2. Elegir **Nuevo proyecto** y ponerle el nombre `Backend Checklist Vapor y Condensado`.
 3. Abrir `apps_script_backend/Code.gs` de este paquete, copiar **todo** y sustituir el contenido inicial de `Código.gs` del proyecto.
 4. Guardar el proyecto.
-5. Entrar en **Configuración del proyecto → Propiedades de secuencia de comandos** y crear `WRITE_KEY` = contraseña larga para cargas, **mínimo 16 caracteres**. Ya no se usa `READ_KEY` para consultar. Si la propiedad antigua existe, puede permanecer guardada.
+5. Entrar en **Configuración del proyecto → Propiedades de secuencia de comandos** y crear `WRITE_KEY` = contraseña larga para cargas, **mínimo 8 caracteres**. Ya no se usa `READ_KEY` para consultar. Si la propiedad antigua existe, puede permanecer guardada.
 6. En la lista de funciones del editor, seleccionar `validarConfiguracion` y pulsar **Ejecutar**. Autorizar el acceso a la hoja cuando Google lo solicite. La función comprueba la pestaña, los encabezados y la presencia de ambas propiedades sin escribir datos.
 7. Si todavía no existe la implementación, pulsar **Implementar → Nueva implementación → Tipo: Aplicación web**. Seleccionar *Ejecutar como: Yo*. Para permitir la consulta sin iniciar sesión, configurar el acceso como *Cualquier usuario* (si la política de la organización lo permite), y copiar la URL que termina en `/exec`. Si ya existe, usar **Implementar → Administrar implementaciones → Editar (lápiz) → Versión: Nueva versión → Implementar**, sin crear una URL nueva.
 
@@ -57,6 +57,6 @@ La interfaz tiene definidas las 23 fotografías utilizadas por la pestaña origi
 
 ## Limitaciones actuales
 
-**Estado actual:** el frontend de `preinca/ChecklistSyU` está publicado en GitHub Pages. El backend actualizado `apps_script_backend/Code.gs` debe copiarse al proyecto de Apps Script y publicarse como **nueva versión de la implementación existente**. Mientras siga desplegado el backend anterior, la consulta sin contraseña fallará. Comprobar la lectura real y la carga con `WRITE_KEY` después del despliegue.
+**Publicación de cambios en el backend:** cuando se modifique `apps_script_backend/Code.gs`, copiar el código al proyecto de Google Apps Script y publicar **una nueva versión de la implementación existente** (Implementar → Administrar implementaciones → Editar → Nueva versión → Implementar). La `WRITE_KEY` debe tener un mínimo de 8 caracteres; modificar solamente esta propiedad no requiere una nueva implementación una vez desplegado este código.
 
 **Histórico:** la pestaña `LISTA_VERIFICADOS` del archivo original que se pudo consultar estaba vacía; si hay historial en otra hoja, Excel o respaldo, habrá que identificarlo y migrarlo sin suponer registros inexistentes.
