@@ -138,7 +138,7 @@
     $('refinery-zoom-level').textContent=Math.round(refineryZoom*100)+'%';
   }
   function openRefineryDiagram(src,label){
-    if(!/^images\/desmet\/[a-z0-9_-]+\.(?:png|jpe?g|webp)$/i.test(src))return false;
+    if(!/^images\/(?:desmet|tiuna)\/[a-z0-9_-]+\.(?:png|jpe?g|webp)$/i.test(src))return false;
     const dialog=$('refinery-zoom-modal'),img=$('refinery-zoom-image');
     if(!dialog||typeof dialog.showModal!=='function')return false;
     $('refinery-zoom-title').textContent=label;
@@ -254,7 +254,8 @@
     $('ref-area').addEventListener('change',()=>renderRefChoices(true));$('ref-point').addEventListener('change',renderRefs);$('ref-mode').addEventListener('change',renderRefs);
     $('history-body').addEventListener('click',e=>{const b=e.target.closest('[data-photo-area]');if(!b)return;$('ref-area').value=b.dataset.photoArea;renderRefChoices(true);$('ref-point').value=b.dataset.photoPoint;$('ref-mode').value='point';renderRefs();$('referencias').scrollIntoView({behavior:'smooth'});});
     $('reference-content').addEventListener('click',e=>{const b=e.target.closest('[data-image-file]');if(b)openPhoto(b.dataset.imageFile,b.dataset.imageLabel);});
-    $('desmet').addEventListener('click',e=>{
+    // Ambas refinerías comparten el visor, manteniendo galerías independientes.
+    for(const refinery of ['desmet','tiuna'])$(refinery).addEventListener('click',e=>{
       const b=e.target.closest('[data-refinery-diagram]');if(!b)return;
       if(openRefineryDiagram(b.dataset.refineryDiagram,b.dataset.refineryTitle||'Diagrama técnico'))e.preventDefault();
     });
