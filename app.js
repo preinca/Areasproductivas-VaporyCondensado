@@ -226,7 +226,31 @@
     $('history-body').addEventListener('click',e=>{const b=e.target.closest('[data-photo-area]');if(!b)return;$('ref-area').value=b.dataset.photoArea;renderRefChoices(true);$('ref-point').value=b.dataset.photoPoint;$('ref-mode').value='point';renderRefs();$('referencias').scrollIntoView({behavior:'smooth'});});
     $('reference-content').addEventListener('click',e=>{const b=e.target.closest('[data-image-file]');if(b)openPhoto(b.dataset.imageFile,b.dataset.imageLabel);});
     $('modal-close').addEventListener('click',closePhoto);$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closePhoto();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closePhoto();});
-    document.querySelectorAll('.nav-item').forEach(link=>link.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));link.classList.add('active');}));
+    // Cada pestaña tiene su propia vista sin alterar el checklist del Panel General.
+    function showView(){
+      const route=decodeURIComponent(window.location.hash.slice(1)).toLowerCase();
+      const view=['desmet','tiuna'].includes(route)?route:'panel';
+      document.querySelectorAll('.dashboard-view').forEach(section=>{
+        section.hidden=section.dataset.view!==view;
+      });
+      document.querySelectorAll('.nav-item[data-view]').forEach(link=>{
+        const active=link.dataset.view===view;
+        link.classList.toggle('active',active);
+        if(active)link.setAttribute('aria-current','page');
+        else link.removeAttribute('aria-current');
+      });
+      if(view!=='panel'||route==='panel')window.scrollTo(0,0);
+      if(view==='panel'&&['historico','referencias'].includes(route)){
+        requestAnimationFrame(()=>document.getElementById(route)?.scrollIntoView());
+      }
+    }
+    document.querySelectorAll('.nav-item[data-view]').forEach(link=>link.addEventListener('click',e=>{
+      e.preventDefault();
+      if(window.location.hash!==link.getAttribute('href'))window.location.hash=link.getAttribute('href');
+      showView();
+    }));
+    window.addEventListener('hashchange',showView);
+    showView();
     status(apiURL()?'Preparado para sincronizar':'URL de Apps Script pendiente');
     if(apiURL())refresh();
   }
