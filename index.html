@@ -7,10 +7,10 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="description" content="Verificaciones operativas de vapor y condensado, inspecciones y avisos B1.">
   <title>Checklist Vapor y Condensado | Servicios de Planta</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261103-desmet-zoom">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
   <script src="config.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="app.js?v=20261103-desmet-zoom" defer></script>
 </head>
 <body>
 <div class="layout">
@@ -75,14 +75,13 @@
           </div>
         </div>
         <div class="refinery-diagram-gallery" aria-label="Galería de diagramas del primer piso">
-          <button class="refinery-diagram-card" type="button" data-refinery-diagram="images/desmet/entrada_principal_planta.png" data-refinery-title="Entrada Principal a Planta" aria-label="Ampliar diagrama: Entrada Principal a Planta">
+          <a class="refinery-diagram-card" href="images/desmet/entrada_principal_planta.png" target="_blank" rel="noopener noreferrer" data-refinery-diagram="images/desmet/entrada_principal_planta.png" data-refinery-title="Entrada Principal a Planta" aria-label="Ampliar diagrama: Entrada Principal a Planta">
             <span class="refinery-diagram-preview">
               <img src="images/desmet/entrada_principal_planta.png" alt="Vista previa del conjunto de intercambio de calor y bombeo" loading="lazy" decoding="async">
               <span class="refinery-diagram-zoom" aria-hidden="true">⤢</span>
             </span>
             <span class="refinery-diagram-caption">Entrada Principal a Planta</span>
-            <span class="refinery-diagram-hint">Clic para ampliar</span>
-          </button>
+          </a>
         </div>
       </section>
     </section>
@@ -101,6 +100,23 @@
   </main>
 </div>
 <div id="modal" class="modal" hidden role="dialog" aria-modal="true" aria-label="Vista ampliada"><button class="modal-close" id="modal-close" aria-label="Cerrar foto">×</button><img id="modal-img" alt="Referencia ampliada"><div id="modal-caption"></div></div>
+<dialog class="refinery-zoom-modal" id="refinery-zoom-modal" aria-labelledby="refinery-zoom-title">
+  <div class="refinery-zoom-layout">
+    <div class="refinery-zoom-toolbar">
+      <strong id="refinery-zoom-title">Entrada Principal a Planta</strong>
+      <div class="refinery-zoom-actions">
+        <button type="button" class="btn muted" id="refinery-zoom-out" aria-label="Alejar diagrama">−</button>
+        <span id="refinery-zoom-level" aria-live="polite">100%</span>
+        <button type="button" class="btn muted" id="refinery-zoom-in" aria-label="Acercar diagrama">+</button>
+        <button type="button" class="btn muted" id="refinery-zoom-reset" aria-label="Ajustar diagrama a la ventana">Ajustar</button>
+        <button type="button" class="btn muted" id="refinery-zoom-close" aria-label="Cerrar diagrama">✕</button>
+      </div>
+    </div>
+    <div class="refinery-zoom-body" id="refinery-zoom-body">
+      <img id="refinery-zoom-image" alt="Diagrama técnico ampliado">
+    </div>
+  </div>
+</dialog>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>
