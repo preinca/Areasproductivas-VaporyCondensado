@@ -6,7 +6,7 @@ Esta carpeta contiene las imágenes utilizadas en la pestaña **TIUNA** del dash
 
 | Piso | Diagrama | Nombre de archivo |
 | --- | --- | --- |
-| 1er piso | Conjunto de tuberías e instrumentación | `conjunto_tuberias_instrumentacion.png` |
+| 1er piso | Generación de Vapor | `conjunto_tuberias_instrumentacion.png` |
 | 1er y 2do piso | Sistema de distribución de vapor de blanqueo | `distribucion_vapor_blanqueo_dos_niveles.png` |
 | 2do piso | Intercambiador de calor del sistema de blanqueo (E-103) | `intercambiador_calor_e103.png` |
 | 2do piso | Manifold de distribución de vapor de blanqueo | `manifold_distribucion_vapor_blanqueo.png` |
