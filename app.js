@@ -121,6 +121,13 @@
     view.querySelectorAll('img[data-remote]').forEach(img=>img.addEventListener('error',()=>{const remote=img.dataset.remote;if(remote&&img.src!==remote){img.removeAttribute('data-remote');img.src=remote;}}));
   }
   function openPhoto(file,label){const modal=$('modal'),img=$('modal-img');img.src=imageSrc(file);img.onerror=()=>{img.onerror=null;img.src=remoteSrc(file)};img.alt=label;$('modal-caption').textContent=label;modal.hidden=false;}
+  // Ampliar diagramas del primer piso sin modificar el visor de fotografías existente.
+  function openRefineryDiagram(src,label){
+    if(src!=='images/desmet/entrada_principal_planta.png')return;
+    const modal=$('modal'),img=$('modal-img');
+    img.onerror=null;img.src=src;img.alt=label;
+    $('modal-caption').textContent=label;modal.hidden=false;
+  }
   function closePhoto(){$('modal').hidden=true;$('modal-img').removeAttribute('src');}
   // El navegador conserva SOLO la URL pública del Web App. Nunca guarda contraseñas.
   const API_STORAGE_KEY='vc_checklist_api_url';
@@ -225,6 +232,7 @@
     $('ref-area').addEventListener('change',()=>renderRefChoices(true));$('ref-point').addEventListener('change',renderRefs);$('ref-mode').addEventListener('change',renderRefs);
     $('history-body').addEventListener('click',e=>{const b=e.target.closest('[data-photo-area]');if(!b)return;$('ref-area').value=b.dataset.photoArea;renderRefChoices(true);$('ref-point').value=b.dataset.photoPoint;$('ref-mode').value='point';renderRefs();$('referencias').scrollIntoView({behavior:'smooth'});});
     $('reference-content').addEventListener('click',e=>{const b=e.target.closest('[data-image-file]');if(b)openPhoto(b.dataset.imageFile,b.dataset.imageLabel);});
+    $('desmet').addEventListener('click',e=>{const b=e.target.closest('[data-refinery-diagram]');if(b)openRefineryDiagram(b.dataset.refineryDiagram,b.dataset.refineryTitle||'Diagrama técnico');});
     $('modal-close').addEventListener('click',closePhoto);$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closePhoto();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closePhoto();});
     // Cada pestaña tiene su propia vista sin alterar el checklist del Panel General.
     function showView(){
