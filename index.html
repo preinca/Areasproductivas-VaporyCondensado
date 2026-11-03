@@ -17,12 +17,15 @@
   <aside class="sidebar" aria-label="Navegación">
     <div class="brand"><span class="brand-mark">VC</span><span><strong>Vapor &amp; Condensado</strong><small>Control de verificaciones</small></span></div>
     <div class="side-label">OPERACIÓN</div>
-    <nav>
-      <a class="nav-item active" href="#panel"><span>▣</span> Panel general</a>
+    <nav aria-label="Secciones del dashboard">
+      <a class="nav-item active" href="#panel" data-view="panel" aria-current="page"><span class="nav-icon" aria-hidden="true">▣</span><span class="nav-copy"><strong>Panel General</strong></span></a>
+      <a class="nav-item" href="#desmet" data-view="desmet"><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-copy"><strong>DE SMET</strong><small>Refinerias</small></span></a>
+      <a class="nav-item" href="#tiuna" data-view="tiuna"><span class="nav-icon" aria-hidden="true">▥</span><span class="nav-copy"><strong>TIUNA</strong><small>Refinerias</small></span></a>
     </nav>
     <div class="sidebar-bottom">Sistema independiente<br><strong>Checklist · v1.1</strong></div>
   </aside>
   <main class="main">
+    <div id="view-panel" class="dashboard-view" data-view="panel">
     <header class="topbar"><div><div class="eyebrow">SERVICIOS DE PLANTA / INSPECCIONES</div><h1>Checklist Vapor y Condensado</h1><p>Seguimiento técnico de condiciones, desviaciones y avisos de mantenimiento.</p></div><div class="sync-actions"><span id="sync-status" class="status-pill" aria-live="polite">Sin sincronizar</span><button id="refresh" class="btn muted">↻ Actualizar</button></div></header>
     <section id="panel" class="content-section" aria-labelledby="panel-title">
       <div class="section-head"><div><h2 id="panel-title">Resumen operacional</h2><p>Indicadores calculados a partir de los registros consultados y sus filtros.</p></div><span class="sync-small" id="last-sync">Sin lectura de datos</span></div>
@@ -55,6 +58,29 @@
     <section id="referencias" class="content-section" aria-labelledby="reference-title">
       <div class="section-head"><div><h2 id="reference-title">Referencias visuales</h2><p>Identifique la ubicación del punto a verificar mediante los diagramas y fotografías.</p></div></div>
       <div class="card reference-card"><div class="filters ref-filters"><label>Área<select id="ref-area"></select></label><label>Punto / equipo<select id="ref-point"></select></label><label>Vista<select id="ref-mode"><option value="point">Punto / equipo</option><option value="area">Todas las fotos del área</option><option value="hide">Ocultar referencias</option></select></label></div><div id="reference-content" class="reference-content"></div></div>
+    </section>
+    </div>
+    <section id="desmet" class="dashboard-view refinery-view" data-view="desmet" aria-labelledby="desmet-title" hidden>
+      <header class="topbar">
+        <div><div class="eyebrow">REFINERIAS</div><h1 id="desmet-title">DE SMET</h1><p>Refinerias</p></div>
+      </header>
+      <div class="card refinery-placeholder">
+        <div class="refinery-placeholder-icon" aria-hidden="true">▤</div>
+        <h2>DE SMET</h2>
+        <p>Sección creada para incorporar los indicadores, verificaciones y registros de esta refinería.</p>
+        <span>Sin datos configurados por el momento</span>
+      </div>
+    </section>
+    <section id="tiuna" class="dashboard-view refinery-view" data-view="tiuna" aria-labelledby="tiuna-title" hidden>
+      <header class="topbar">
+        <div><div class="eyebrow">REFINERIAS</div><h1 id="tiuna-title">TIUNA</h1><p>Refinerias</p></div>
+      </header>
+      <div class="card refinery-placeholder">
+        <div class="refinery-placeholder-icon" aria-hidden="true">▥</div>
+        <h2>TIUNA</h2>
+        <p>Sección creada para incorporar los indicadores, verificaciones y registros de esta refinería.</p>
+        <span>Sin datos configurados por el momento</span>
+      </div>
     </section>
     <footer>Checklist Vapor y Condensado · Registro histórico en Google Sheets independiente</footer>
   </main>
