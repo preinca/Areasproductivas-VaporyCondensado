@@ -60,3 +60,10 @@ La interfaz tiene definidas las 23 fotografías utilizadas por la pestaña origi
 **Publicación de cambios en el backend:** cuando se modifique `apps_script_backend/Code.gs`, copiar el código al proyecto de Google Apps Script y publicar **una nueva versión de la implementación existente** (Implementar → Administrar implementaciones → Editar → Nueva versión → Implementar). La `WRITE_KEY` debe tener un mínimo de 8 caracteres; modificar solamente esta propiedad no requiere una nueva implementación una vez desplegado este código.
 
 **Histórico:** la pestaña `LISTA_VERIFICADOS` del archivo original que se pudo consultar estaba vacía; si hay historial en otra hoja, Excel o respaldo, habrá que identificarlo y migrarlo sin suponer registros inexistentes.
+
+## Corrección de fechas (03-11-2026)
+
+- El backend utiliza el **valor visible** de la columna `Fecha` (B) en la hoja `LISTA_VERIFICADOS`, en formato `dd/mm/yyyy`, y lo transmite como `yyyy-mm-dd`. No desplaza fechas según la zona horaria del proyecto.
+- La versión de diagnóstico esperada es `VC-1.3-FECHAS-2026-11-03`. Tras reemplazar el código y publicar **Nueva versión** en la implementación web existente, abrir la URL `/exec` directamente en el navegador y comprobar que el JSON contiene esa versión.
+- Si `/exec` muestra una versión anterior, todavía está publicada una implementación antigua o el `config.js` apunta a otra implementación.
+- No hace falta volver a subir archivos Excel ni modificar las fechas en Google Sheets.
