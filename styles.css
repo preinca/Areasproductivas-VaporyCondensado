@@ -31,8 +31,20 @@
 .refinery-diagram-preview img{display:block;width:100%;height:100%;object-fit:contain}
 .refinery-diagram-zoom{position:absolute;top:10px;right:10px;display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:rgba(22,32,42,.77);color:#fff;font-size:19px;opacity:0;transition:opacity .16s}
 .refinery-diagram-card:hover .refinery-diagram-zoom,.refinery-diagram-card:focus-visible .refinery-diagram-zoom{opacity:1}
-.refinery-diagram-caption{display:block;padding:13px 13px 4px;min-height:49px;color:var(--ink);font-size:13px;font-weight:700;line-height:1.4}
-.refinery-diagram-hint{display:block;margin-top:auto;padding:0 13px;color:var(--muted);font-size:11px}
+.refinery-diagram-caption{display:block;padding:13px 13px 2px;min-height:43px;color:var(--ink);font-size:14px;font-weight:750;line-height:1.4;text-align:center}
 @media(max-width:1180px){.refinery-diagram-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:730px){.refinery-diagram-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
 @media(max-width:430px){.refinery-diagram-gallery{grid-template-columns:1fr}.refinery-diagram-preview{aspect-ratio:16/9}}
+
+/* Visor exclusivo de diagramas DE SMET. Mantiene su tamaño reducido en la galería. */
+.refinery-zoom-modal{padding:0;width:min(1440px,96vw);height:min(92vh,1000px);max-width:none;max-height:none;overflow:hidden;border:1px solid #cbd9e5;border-radius:14px;background:#fff;color:var(--ink);box-shadow:0 20px 90px rgba(0,0,0,.3)}
+.refinery-zoom-modal::backdrop{background:rgba(8,20,32,.86)}
+.refinery-zoom-layout{display:flex;flex-direction:column;width:100%;height:100%;min-height:0}
+.refinery-zoom-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--border);background:#fff}
+.refinery-zoom-toolbar strong{font-size:14px;font-weight:750}
+.refinery-zoom-actions{display:flex;align-items:center;gap:6px}
+.refinery-zoom-actions .btn{min-width:36px;min-height:34px;padding:6px 10px}
+.refinery-zoom-actions #refinery-zoom-level{min-width:48px;text-align:center;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.refinery-zoom-body{flex:1;min-height:0;overflow:auto;display:flex;align-items:safe center;justify-content:safe center;padding:18px;background:#e9eef3}
+.refinery-zoom-body img{display:block;flex:none;max-width:none;max-height:none;width:auto;height:auto;background:#fff;box-shadow:0 4px 30px #0002;object-fit:contain}
+@media(max-width:730px){.refinery-zoom-modal{width:98vw;height:95vh}.refinery-zoom-toolbar{padding:8px 10px;gap:8px}.refinery-zoom-toolbar strong{width:100%;font-size:13px}.refinery-zoom-actions{width:100%;justify-content:space-between}.refinery-zoom-body{padding:8px}}
