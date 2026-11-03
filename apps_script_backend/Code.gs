@@ -9,7 +9,7 @@
  * Cuando el Web App es público, cualquier persona que conozca el endpoint
  * puede consultar el historial. No publicar información confidencial.
  */
-const VC_VERSION = 'VC-1.2-2026-11-02';
+const VC_VERSION = 'VC-1.3-FECHAS-2026-11-03';
 const VC_SHEET_ID = '1wk8lgVDfJdKgTKo0ZGznBBhVw_pmPmu30r41G5aA9FY';
 const VC_TAB = 'LISTA_VERIFICADOS';
 const VC_HEADERS = [
@@ -33,16 +33,36 @@ function vcDate_(value,sheetTimeZone){
   const m=s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
   return m?m[1]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[3]).slice(-2):s;
 }
+/** Lee el día que se visualiza en la hoja, sin cambiarlo por zona horaria.
+ * La columna B de LISTA_VERIFICADOS usa el formato dd/mm/yyyy.
+ */
+function vcDateDisplayed_(value){
+  const s=String(value||'').trim();
+  let m=s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\s|$)/);
+  if(m)return m[1]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[3]).slice(-2);
+  m=s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(?:\s|$)/);
+  if(m)return m[3]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2);
+  return '';
+}
 function vcRead_(){
   const sh=vcSheet_(),last=sh.getLastRow();
   if(last<2)return [];
   const sheetTimeZone=sh.getParent().getSpreadsheetTimeZone();
   const values=sh.getRange(2,1,last-1,VC_HEADERS.length).getValues();
-  return values.filter(r=>r.some(v=>v!==''&&v!==null)).map(row=>{
-    const item={};VC_HEADERS.forEach((h,i)=>{let value=row[i];if(h==='Fecha')value=vcDate_(value,sheetTimeZone);
+  // Obtener exactamente el texto visible de la columna Fecha (B).
+  // De este modo, la fecha 02/11/2026 nunca se interpreta como 01/11.
+  const displayDates=sh.getRange(2,2,last-1,1).getDisplayValues();
+  return values.map((row,rowIndex)=>{
+    if(!row.some(v=>v!==''&&v!==null))return null;
+    const item={};
+    VC_HEADERS.forEach((h,i)=>{
+      let value=row[i];
+      if(h==='Fecha')value=vcDateDisplayed_(displayDates[rowIndex]?.[0])||vcDate_(value,sheetTimeZone);
       else if(value instanceof Date)value=Utilities.formatDate(value,Session.getScriptTimeZone()||'America/Caracas','yyyy-MM-dd HH:mm:ss');
-      item[h]=value===undefined||value===null?'':String(value);});return item;
-  });
+      item[h]=value===undefined||value===null?'':String(value);
+    });
+    return item;
+  }).filter(Boolean);
 }
 function vcData_(extra){return Object.assign({ok:true,version:VC_VERSION,rows:vcRead_(),updatedAt:new Date().toISOString()},extra||{});}
 function vcJson_(result){return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);}
