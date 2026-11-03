@@ -25,8 +25,10 @@ function vcSheet_(){
   if(first.some((x,i)=>String(x).trim()!==VC_HEADERS[i]))throw Error('Los encabezados de LISTA_VERIFICADOS no coinciden con el esquema previsto.');
   return sh;
 }
-function vcDate_(value){
-  if(value instanceof Date&&!isNaN(value.getTime()))return Utilities.formatDate(value,Session.getScriptTimeZone()||'America/Caracas','yyyy-MM-dd');
+function vcDate_(value,sheetTimeZone){
+  // Las fechas procedentes de Sheets se interpretan con la zona horaria de la hoja,
+  // no con la del proyecto Apps Script. Evita que 02/11 aparezca como 01/11.
+  if(value instanceof Date&&!isNaN(value.getTime()))return Utilities.formatDate(value,sheetTimeZone||Session.getScriptTimeZone()||'America/Caracas','yyyy-MM-dd');
   const s=String(value||'').trim();
   const m=s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
   return m?m[1]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[3]).slice(-2):s;
@@ -34,9 +36,10 @@ function vcDate_(value){
 function vcRead_(){
   const sh=vcSheet_(),last=sh.getLastRow();
   if(last<2)return [];
+  const sheetTimeZone=sh.getParent().getSpreadsheetTimeZone();
   const values=sh.getRange(2,1,last-1,VC_HEADERS.length).getValues();
   return values.filter(r=>r.some(v=>v!==''&&v!==null)).map(row=>{
-    const item={};VC_HEADERS.forEach((h,i)=>{let value=row[i];if(h==='Fecha')value=vcDate_(value);
+    const item={};VC_HEADERS.forEach((h,i)=>{let value=row[i];if(h==='Fecha')value=vcDate_(value,sheetTimeZone);
       else if(value instanceof Date)value=Utilities.formatDate(value,Session.getScriptTimeZone()||'America/Caracas','yyyy-MM-dd HH:mm:ss');
       item[h]=value===undefined||value===null?'':String(value);});return item;
   });
