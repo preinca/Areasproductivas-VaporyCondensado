@@ -21,3 +21,8 @@
 
 /* Separación del grupo Refinerias; hereda exactamente el estilo de OPERACIÓN */
 .sidebar .side-label.refinery-label{margin-top:24px}
+
+/* Lámina técnica de DE SMET — primer piso */
+.refinery-diagram-card{margin:0;overflow:hidden;padding:clamp(10px,2vw,20px);background:#fff}
+.refinery-diagram-card img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;border:1px solid var(--border);border-radius:9px;background:#f7fafc}
+.refinery-diagram-card figcaption{text-align:center;margin:14px 0 1px;color:var(--ink);font-size:14px;font-weight:750;line-height:1.45}
