@@ -82,6 +82,31 @@
     const entry=DIAGRAMS[area]?.find(v=>norm(v[0])===norm(point));
     return entry?{src:entry[1],title:entry[2]}:null;
   }
+  // Referencias visuales por refinería: los doce diagramas ya publicados, sin duplicar archivos.
+  function renderRefChoices(slug,reset=false){
+    const area=REFINERIES[slug],list=DIAGRAMS[area]||[],select=$(slug+'-ref-point'),previous=select.value;
+    select.replaceChildren();
+    for(const [point] of list)select.add(new Option(point,point));
+    select.value=!reset&&list.some(([point])=>point===previous)?previous:(list[0]?.[0]||'');
+    renderRefs(slug);
+  }
+  function renderRefs(slug){
+    const area=REFINERIES[slug],point=$(slug+'-ref-point').value,mode=$(slug+'-ref-mode').value,view=$(slug+'-reference-content');
+    $(slug+'-ref-point').disabled=mode!=='point';
+    if(mode==='hide'){view.hidden=true;view.replaceChildren();return;}
+    view.hidden=false;
+    const refs=mode==='area'?(DIAGRAMS[area]||[]):(DIAGRAMS[area]||[]).filter(([name])=>norm(name)===norm(point));
+    const heading=`<div class="ref-heading"><h3>${esc(area)} · ${esc(mode==='area'?'Todos los diagramas':point)}</h3><span>${refs.length} diagrama(s)</span></div>`;
+    const cards=refs.map(([,src,title])=>`
+      <a class="refinery-diagram-card" href="${esc(src)}" target="_blank" rel="noopener noreferrer" data-refinery-diagram="${esc(src)}" data-refinery-title="${esc(title)}" aria-label="Ampliar diagrama: ${esc(title)}">
+        <span class="refinery-diagram-preview">
+          <img src="${esc(src)}" alt="Diagrama técnico: ${esc(title)}" loading="lazy" decoding="async">
+          <span class="refinery-diagram-zoom" aria-hidden="true">⤢</span>
+        </span>
+        <span class="refinery-diagram-caption">${esc(title)}</span>
+      </a>`).join('');
+    view.innerHTML=heading+(refs.length?`<div class="refinery-diagram-gallery">${cards}</div>`:'<div class="empty">No hay un diagrama asociado a este punto.</div>');
+  }
   function render(slug){
     const areaRows=rows.filter(r=>r['Área']===REFINERIES[slug]);
     choice(slug,'date',[...new Set(areaRows.map(r=>r.Fecha).filter(Boolean))].sort().reverse(),'Todas las fechas');
@@ -229,6 +254,9 @@
       $(slug+'-prev-page').addEventListener('click',()=>{pagination[slug]=Math.max(1,pagination[slug]-1);render(slug);});
       $(slug+'-next-page').addEventListener('click',()=>{pagination[slug]++;render(slug);});
       $(slug+'-page-select').addEventListener('change',event=>{pagination[slug]=Number(event.target.value)||1;render(slug);});
+      $(slug+'-ref-point').addEventListener('change',()=>renderRefs(slug));
+      $(slug+'-ref-mode').addEventListener('change',()=>renderRefs(slug));
+      renderRefChoices(slug,true);
       render(slug);
     }
     refresh();
