@@ -269,20 +269,48 @@
     $('refinery-zoom-modal').addEventListener('click',e=>{if(e.target.id==='refinery-zoom-modal')e.currentTarget.close();});
     window.addEventListener('resize',()=>{if($('refinery-zoom-modal').open)fitRefineryDiagram();});
     $('modal-close').addEventListener('click',closePhoto);$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closePhoto();});document.addEventListener('keydown',e=>{if(e.key==='Escape')closePhoto();});
-    // Cada pestaña tiene su propia vista sin alterar el checklist del Panel General.
+    // Panel General y cinco áreas reutilizan indicadores, histórico y referencias;
+    // las rutas de refinerías mantienen sus galerías originales independientes.
     function showView(){
       const route=decodeURIComponent(window.location.hash.slice(1)).toLowerCase();
+      const newArea=AREA_ROUTES[route]||'*';
       const view=['desmet','tiuna'].includes(route)?route:'panel';
+      const activeNav=AREA_ROUTES[route]?route:view;
+      if(newArea!==activeArea){
+        for(const id of ['filter-date','filter-turn','filter-status'])$(id).value='*';
+        $('filter-search').value='';
+        page=1;
+      }
+      activeArea=newArea;
       document.querySelectorAll('.dashboard-view').forEach(section=>{
         section.hidden=section.dataset.view!==view;
       });
       document.querySelectorAll('.nav-item[data-view]').forEach(link=>{
-        const active=link.dataset.view===view;
+        const active=link.dataset.view===activeNav;
         link.classList.toggle('active',active);
         if(active)link.setAttribute('aria-current','page');
         else link.removeAttribute('aria-current');
       });
-      if(view!=='panel'||route==='panel')window.scrollTo(0,0);
+      const isArea=activeArea!=='*',name=isArea?areaLabel(activeArea):'';
+      $('panel-eyebrow').textContent=isArea?'SERVICIOS DE PLANTA / ÁREAS':'SERVICIOS DE PLANTA / INSPECCIONES';
+      $('panel-heading').textContent=isArea?'Área de '+name:'Checklist Vapor y Condensado';
+      $('panel-description').textContent=isArea?'Verificaciones de vapor y condensado correspondientes al área de '+name+'.':'Seguimiento técnico de condiciones, desviaciones y avisos de mantenimiento.';
+      $('panel-title').textContent=isArea?'Resumen de '+name:'Resumen operacional';
+      $('history-title').textContent=isArea?'Histórico de '+name:'Histórico de verificaciones';
+      $('history-description').textContent=isArea?'Registros, condiciones y avisos de mantenimiento del área de '+name+'.':'Registros de Queso, Tomate, Mayonesa, Manifold y Margarina.';
+      $('reference-title').textContent=isArea?'Referencias visuales · '+name:'Referencias visuales';
+      $('filter-area-label').hidden=isArea;
+      $('filter-area').disabled=isArea;
+      $('areas').hidden=isArea;
+      $('ref-area-label').hidden=isArea;
+      $('ref-area').disabled=isArea;
+      if(isArea&&$('ref-area').value!==activeArea){
+        $('ref-area').value=activeArea;
+        renderRefChoices(true);
+      }
+      if(!isArea)$('filter-area').value='*';
+      render();
+      if(isArea||view!=='panel'||route==='panel')window.scrollTo(0,0);
       if(view==='panel'&&['historico','referencias'].includes(route)){
         requestAnimationFrame(()=>document.getElementById(route)?.scrollIntoView());
       }
