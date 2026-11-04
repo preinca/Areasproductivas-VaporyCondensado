@@ -135,3 +135,15 @@
   .refinery-view .refinery-checklist .refinery-filters{grid-template-columns:1fr}
   .refinery-view .refinery-checklist .refinery-filters .search-field{grid-column:span 1}
 }
+
+/* Referencias visuales por punto de DE SMET y TIUNA */
+.refinery-view .refinery-references .refinery-reference-filters{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  max-width:800px;
+}
+.refinery-view .refinery-references .reference-content{padding:6px 19px 24px}
+.refinery-view .refinery-references .ref-heading{margin-bottom:16px}
+.refinery-view .refinery-references .refinery-diagram-gallery{margin:0}
+@media(max-width:500px){
+  .refinery-view .refinery-references .refinery-reference-filters{grid-template-columns:1fr}
+}
