@@ -76,3 +76,19 @@
 @media(max-width:500px){
   #view-panel.area-mode .filters:not(.ref-filters),#view-panel.area-mode .ref-filters{grid-template-columns:1fr}
 }
+
+/* Identidad institucional: logos originales de Empresas Polar y PREINCA */
+.sidebar .brand{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:0 7px 27px}
+.sidebar .brand-logos{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;max-width:100%;min-height:52px}
+.sidebar .brand-logo-polar{display:block;width:140px;max-width:calc(100% - 58px);height:auto;max-height:58px;object-fit:contain;object-position:left center;flex:0 1 auto}
+.sidebar .brand-logo-preinca{display:block;width:auto;height:46px;max-width:48px;object-fit:contain;flex:0 0 auto}
+.sidebar .brand-name{display:block;min-width:0;width:100%}
+.sidebar .brand-name strong{display:block;font-size:14px}
+.sidebar .brand-name small{display:block;color:#b5d0e1;font-size:11px;margin-top:3px}
+@media(max-width:770px){
+  .sidebar .brand{flex-direction:row;align-items:center;gap:13px;padding:3px 3px 12px}
+  .sidebar .brand-logos{width:148px;min-width:148px;flex:0 0 148px;gap:7px;min-height:40px}
+  .sidebar .brand-logo-polar{width:103px;max-width:103px;max-height:43px}
+  .sidebar .brand-logo-preinca{height:35px;max-width:37px}
+  .sidebar .brand-name{width:auto;flex:1}
+}
