@@ -54,3 +54,25 @@
 
 /* Pisos de TIUNA preparados para futuras miniaturas 4:3 */
 .refinery-diagram-empty{display:flex;align-items:center;justify-content:center;min-height:175px;padding:24px 16px;border:1px dashed #c6d4df;border-radius:12px;background:#f8fafc;color:var(--muted);font-size:12px;text-align:center;line-height:1.5}
+
+/* Navegación: Operación → Áreas → Refinerías */
+.sidebar{overflow-y:auto}
+.sidebar-bottom{flex-shrink:0}
+.sidebar .side-label.area-label{margin-top:24px}
+.areas[hidden],#filter-area-label[hidden],#ref-area-label[hidden]{display:none!important}
+/* Cada pestaña de área muestra los datos de esa área; el Panel General conserva sus cinco tarjetas. */
+#view-panel.area-mode .filters:not(.ref-filters){grid-template-columns:repeat(3,minmax(0,1fr)) minmax(175px,1.45fr)}
+#view-panel.area-mode .ref-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1150px){
+  #view-panel.area-mode .filters:not(.ref-filters){grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:770px){
+  .sidebar{overflow-y:visible}
+  .sidebar .side-label{display:block;margin:13px 12px 8px}
+  .sidebar .side-label.area-label,.sidebar .side-label.refinery-label{margin-top:14px}
+  .sidebar nav{padding-bottom:3px}
+  #view-panel.area-mode .filters:not(.ref-filters){grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:500px){
+  #view-panel.area-mode .filters:not(.ref-filters),#view-panel.area-mode .ref-filters{grid-template-columns:1fr}
+}
