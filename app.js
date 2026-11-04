@@ -1,6 +1,8 @@
 'use strict';
 (() => {
   const AREAS=['QUESO','TOMATE','MAYONESA','MANIFOLD','MARGARINA'];
+  const AREA_ROUTES=Object.fromEntries(AREAS.map(area=>['area-'+area.toLowerCase(),area]));
+  const areaLabel=area=>area.charAt(0)+area.slice(1).toLowerCase();
   const FIELDS=['Condicion Fuga','Condicion by pass','Condicion Manometros','Condicion Aislamiento','Condicion Seguridad'];
   const HEADERS=['Registro ID','Fecha','Turno','Supervisor','Operador','Área','Punto / Equipo',...FIELDS,'#Aviso B1','Observacion Operador','Archivo origen','Fecha de carga'];
   const ORDER={
@@ -67,12 +69,12 @@
   };
   const stateRow=r=>{const states=FIELDS.map(k=>stateCell(r[k]));return states.includes('issue')?'issue':states.includes('ok')||states.includes('na')?'ok':'pending';};
   const labelState=value=>`<span class="state ${stateCell(value)==='ok'?'':stateCell(value)}">${esc(tx(value)||'—')}</span>`;
-  let data=[],page=1,pageSize=10,selectedArea='*',toastTimer=null,lastSync='';
+  let data=[],page=1,pageSize=10,activeArea='*',toastTimer=null,lastSync='';
   function toast(text){let e=$('toast');e.textContent=text;e.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.hidden=true,6500);}
   function status(msg,mode){let e=$('sync-status');e.textContent=msg;e.className='status-pill'+(mode?' '+mode:'');}
   function normalizeRow(r){let o={};for(let h of HEADERS)o[h]=tx(r?.[h]);if(!o['Condicion Fuga']&&r?.Fugas)o['Condicion Fuga']=tx(r.Fugas);o.Fecha=dateValue(o.Fecha);o['Área']=norm(o['Área']);return o;}
   function choice(id,arr,placeholder){let el=$(id),old=el.value;el.replaceChildren();let first=new Option(placeholder,'*');el.add(first);for(let v of arr)el.add(new Option(v,v));el.value=[...el.options].some(x=>x.value===old)?old:'*';}
-  function selected(){return {area:$('filter-area').value,date:$('filter-date').value,turn:$('filter-turn').value,state:$('filter-status').value,q:norm($('filter-search').value)};}
+  function selected(){return {area:activeArea!=='*'?activeArea:$('filter-area').value,date:$('filter-date').value,turn:$('filter-turn').value,state:$('filter-status').value,q:norm($('filter-search').value)};}
   function filtered(){const f=selected();return data.filter(r=>{
     if(f.area!=='*'&&r['Área']!==f.area)return false;
     if(f.date!=='*'&&r.Fecha!==f.date)return false;
@@ -247,8 +249,9 @@
     $('refresh').addEventListener('click',refresh);$('excel-input').addEventListener('change',upload);
     for(const id of ['filter-area','filter-date','filter-turn','filter-status'])$(id).addEventListener('change',()=>{page=1;render();});
     $('filter-search').addEventListener('input',()=>{page=1;render();});
-    $('clear').addEventListener('click',()=>{['filter-area','filter-date','filter-turn','filter-status'].forEach(id=>$(id).value='*');$('filter-search').value='';page=1;render();});
-    $('areas').addEventListener('click',e=>{const t=e.target.closest('[data-area]');if(!t)return;const area=t.dataset.area;$('filter-area').value=$('filter-area').value===area?'*':area;page=1;render();$('historico').scrollIntoView({behavior:'smooth'});});
+    $('clear').addEventListener('click',()=>{['filter-date','filter-turn','filter-status'].forEach(id=>$(id).value='*');if(activeArea==='*')$('filter-area').value='*';$('filter-search').value='';page=1;render();});
+    // Las tarjetas resumen conducen a la pestaña independiente del área correspondiente.
+    $('areas').addEventListener('click',e=>{const t=e.target.closest('[data-area]');if(!t)return;const area=t.dataset.area;if(AREAS.includes(area))window.location.hash='area-'+area.toLowerCase();});
     $('prev-page').addEventListener('click',()=>{if(page>1){page--;render();}});$('next-page').addEventListener('click',()=>{page++;render();});
     $('page-select').addEventListener('change',e=>{page=Number(e.target.value)||1;render();});
     $('ref-area').addEventListener('change',()=>renderRefChoices(true));$('ref-point').addEventListener('change',renderRefs);$('ref-mode').addEventListener('change',renderRefs);
