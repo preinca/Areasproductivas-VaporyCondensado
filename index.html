@@ -7,10 +7,11 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="description" content="Verificaciones operativas de vapor y condensado, inspecciones y avisos B1.">
   <title>Checklist Vapor y Condensado | Servicios de Planta</title>
-  <link rel="stylesheet" href="styles.css?v=20261104-sidebar-white">
+  <link rel="stylesheet" href="styles.css?v=20261104-refinerias-checklist">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
   <script src="config.js" defer></script>
   <script src="app.js?v=20261104-panel-title" defer></script>
+  <script src="refinerias.js?v=20261104-refinerias-checklist" defer></script>
 </head>
 <body>
 <div class="layout">
@@ -79,8 +80,40 @@
     </div>
     <section id="desmet" class="dashboard-view refinery-view" data-view="desmet" aria-labelledby="desmet-title" hidden>
       <header class="topbar">
-        <div><div class="eyebrow">REFINERIAS</div><h1 id="desmet-title">DE SMET</h1><p>Diagramas técnicos de los sistemas de planta.</p></div>
+        <div><div class="eyebrow">REFINERIAS</div><h1 id="desmet-title">DE SMET</h1><p>Verificaciones y diagramas técnicos de los sistemas de vapor y condensado.</p></div>
       </header>
+
+      <section class="content-section refinery-checklist" id="desmet-checklist" aria-labelledby="desmet-checklist-title">
+        <div class="section-head">
+          <div><h2 id="desmet-checklist-title">Checklist de vapor y condensado · DE SMET</h2><p>Seguimiento de condiciones, desviaciones y avisos de mantenimiento en la refinería.</p></div>
+          <div class="sync-actions"><span class="status-pill" id="desmet-sync-status" aria-live="polite">Sin sincronizar</span><button class="btn muted" type="button" id="desmet-refresh">↻ Actualizar</button></div>
+        </div>
+        <div class="kpis">
+          <article class="metric"><div class="metric-label">Registros visibles <span>▤</span></div><strong id="desmet-kpi-total">0</strong><small>Puntos y equipos inspeccionados</small></article>
+          <article class="metric"><div class="metric-label">Última inspección <span>◷</span></div><strong class="date" id="desmet-kpi-latest">—</strong><small id="desmet-kpi-latest-detail">Sin información</small></article>
+          <article class="metric alert"><div class="metric-label">Con desviación <span>⚠</span></div><strong id="desmet-kpi-issues">0</strong><small>Condiciones fuera de estado OK</small></article>
+          <article class="metric"><div class="metric-label">Avisos B1 <span>♧</span></div><strong id="desmet-kpi-b1">0</strong><small>Registros con aviso asociado</small></article>
+        </div>
+        <div class="panel-toolbar card">
+          <div class="toolbar-top"><div><h3>Filtros de verificación</h3><p>Consulte por fecha, turno, estado o texto.</p></div><button class="btn subtle" type="button" id="desmet-clear">Limpiar filtros</button></div>
+          <div class="filters refinery-filters">
+            <label>Fecha<select id="desmet-filter-date"><option value="*">Todas las fechas</option></select></label>
+            <label>Turno<select id="desmet-filter-turn"><option value="*">Todos los turnos</option></select></label>
+            <label>Estado<select id="desmet-filter-status"><option value="*">Todos los estados</option><option value="issue">Con desviación</option><option value="ok">Verificado</option><option value="pending">Pendiente</option></select></label>
+            <label class="search-field">Buscar<input id="desmet-filter-search" type="search" placeholder="Punto, equipo, aviso, operador..." autocomplete="off"></label>
+          </div>
+        </div>
+        <section class="refinery-history" aria-labelledby="desmet-history-title">
+          <div class="section-head"><div><h2 id="desmet-history-title">Histórico de verificaciones · DE SMET</h2><p id="desmet-last-sync">Registros del checklist de esta refinería.</p></div>
+            <div class="buttons"><a class="btn muted" href="FORMATO_REFINERIAS_CHECKLIST.xlsx" download="FORMATO_REFINADORAS_CHECKLIST.xlsx">↓ Formato Excel</a><label class="btn primary upload" for="desmet-excel-input">↑ Cargar checklist</label><input id="desmet-excel-input" type="file" accept=".xlsx,.xls" hidden></div>
+          </div>
+          <div class="card history-card">
+            <div class="history-head"><strong id="desmet-history-count">0 registros</strong><span class="legend"><i class="dot good"></i> Verificado <i class="dot issue"></i> Desviación <i class="dot pending"></i> Pendiente</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Turno</th><th>Área</th><th>Punto / Equipo</th><th>Condición fuga</th><th>By pass</th><th>Manómetros</th><th>Aislamiento</th><th>Seguridad</th><th>Aviso B1</th><th>Observación</th><th>Supervisor</th><th>Operador</th></tr></thead><tbody id="desmet-history-body"><tr><td colspan="13" class="empty">Sin registros cargados.</td></tr></tbody></table></div>
+            <div class="pager"><span id="desmet-page-meta">0–0 de 0</span><div><button class="btn subtle" type="button" id="desmet-prev-page">← Anteriores</button><select id="desmet-page-select" aria-label="Página del histórico de DE SMET"></select><button class="btn subtle" type="button" id="desmet-next-page">Siguientes →</button></div></div>
+          </div>
+        </section>
+      </section>
       <section class="content-section" aria-labelledby="desmet-diagramas-title">
         <div class="section-head">
           <div>
@@ -143,8 +176,40 @@
     </section>
     <section id="tiuna" class="dashboard-view refinery-view" data-view="tiuna" aria-labelledby="tiuna-title" hidden>
       <header class="topbar">
-        <div><div class="eyebrow">REFINERIAS</div><h1 id="tiuna-title">TIUNA</h1><p>Diagramas técnicos de los sistemas de planta.</p></div>
+        <div><div class="eyebrow">REFINERIAS</div><h1 id="tiuna-title">TIUNA</h1><p>Verificaciones y diagramas técnicos de los sistemas de vapor y condensado.</p></div>
       </header>
+
+      <section class="content-section refinery-checklist" id="tiuna-checklist" aria-labelledby="tiuna-checklist-title">
+        <div class="section-head">
+          <div><h2 id="tiuna-checklist-title">Checklist de vapor y condensado · TIUNA</h2><p>Seguimiento de condiciones, desviaciones y avisos de mantenimiento en la refinería.</p></div>
+          <div class="sync-actions"><span class="status-pill" id="tiuna-sync-status" aria-live="polite">Sin sincronizar</span><button class="btn muted" type="button" id="tiuna-refresh">↻ Actualizar</button></div>
+        </div>
+        <div class="kpis">
+          <article class="metric"><div class="metric-label">Registros visibles <span>▤</span></div><strong id="tiuna-kpi-total">0</strong><small>Puntos y equipos inspeccionados</small></article>
+          <article class="metric"><div class="metric-label">Última inspección <span>◷</span></div><strong class="date" id="tiuna-kpi-latest">—</strong><small id="tiuna-kpi-latest-detail">Sin información</small></article>
+          <article class="metric alert"><div class="metric-label">Con desviación <span>⚠</span></div><strong id="tiuna-kpi-issues">0</strong><small>Condiciones fuera de estado OK</small></article>
+          <article class="metric"><div class="metric-label">Avisos B1 <span>♧</span></div><strong id="tiuna-kpi-b1">0</strong><small>Registros con aviso asociado</small></article>
+        </div>
+        <div class="panel-toolbar card">
+          <div class="toolbar-top"><div><h3>Filtros de verificación</h3><p>Consulte por fecha, turno, estado o texto.</p></div><button class="btn subtle" type="button" id="tiuna-clear">Limpiar filtros</button></div>
+          <div class="filters refinery-filters">
+            <label>Fecha<select id="tiuna-filter-date"><option value="*">Todas las fechas</option></select></label>
+            <label>Turno<select id="tiuna-filter-turn"><option value="*">Todos los turnos</option></select></label>
+            <label>Estado<select id="tiuna-filter-status"><option value="*">Todos los estados</option><option value="issue">Con desviación</option><option value="ok">Verificado</option><option value="pending">Pendiente</option></select></label>
+            <label class="search-field">Buscar<input id="tiuna-filter-search" type="search" placeholder="Punto, equipo, aviso, operador..." autocomplete="off"></label>
+          </div>
+        </div>
+        <section class="refinery-history" aria-labelledby="tiuna-history-title">
+          <div class="section-head"><div><h2 id="tiuna-history-title">Histórico de verificaciones · TIUNA</h2><p id="tiuna-last-sync">Registros del checklist de esta refinería.</p></div>
+            <div class="buttons"><a class="btn muted" href="FORMATO_REFINERIAS_CHECKLIST.xlsx" download="FORMATO_REFINADORAS_CHECKLIST.xlsx">↓ Formato Excel</a><label class="btn primary upload" for="tiuna-excel-input">↑ Cargar checklist</label><input id="tiuna-excel-input" type="file" accept=".xlsx,.xls" hidden></div>
+          </div>
+          <div class="card history-card">
+            <div class="history-head"><strong id="tiuna-history-count">0 registros</strong><span class="legend"><i class="dot good"></i> Verificado <i class="dot issue"></i> Desviación <i class="dot pending"></i> Pendiente</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Turno</th><th>Área</th><th>Punto / Equipo</th><th>Condición fuga</th><th>By pass</th><th>Manómetros</th><th>Aislamiento</th><th>Seguridad</th><th>Aviso B1</th><th>Observación</th><th>Supervisor</th><th>Operador</th></tr></thead><tbody id="tiuna-history-body"><tr><td colspan="13" class="empty">Sin registros cargados.</td></tr></tbody></table></div>
+            <div class="pager"><span id="tiuna-page-meta">0–0 de 0</span><div><button class="btn subtle" type="button" id="tiuna-prev-page">← Anteriores</button><select id="tiuna-page-select" aria-label="Página del histórico de TIUNA"></select><button class="btn subtle" type="button" id="tiuna-next-page">Siguientes →</button></div></div>
+          </div>
+        </section>
+      </section>
       <section class="content-section" aria-labelledby="tiuna-diagramas-title">
         <div class="section-head">
           <div>
