@@ -9,20 +9,24 @@
  * Cuando el Web App es público, cualquier persona que conozca el endpoint
  * puede consultar el historial. No publicar información confidencial.
  */
-const VC_VERSION = 'VC-1.3-FECHAS-2026-11-03';
+const VC_VERSION = 'VC-1.4-REFINERIAS-2026-11-04';
 const VC_SHEET_ID = '1wk8lgVDfJdKgTKo0ZGznBBhVw_pmPmu30r41G5aA9FY';
 const VC_TAB = 'LISTA_VERIFICADOS';
+const VC_REFINERY_TAB = 'LISTA_REFINERIAS';
+const VC_REFINERIES = ['DE SMET','TIUNA'];
 const VC_HEADERS = [
   'Registro ID','Fecha','Turno','Supervisor','Operador','Área','Punto / Equipo',
   'Condicion Fuga','Condicion by pass','Condicion Manometros','Condicion Aislamiento',
   'Condicion Seguridad','#Aviso B1','Observacion Operador','Archivo origen','Fecha de carga'
 ];
-function vcSheet_(){
+function vcSheet_(tabName){
   const ss=SpreadsheetApp.openById(VC_SHEET_ID);
-  const sh=ss.getSheetByName(VC_TAB);
-  if(!sh)throw Error('No existe la pestaña '+VC_TAB+' en la base independiente.');
+  const requestedTab=tabName||VC_TAB;
+  if(requestedTab!==VC_TAB&&requestedTab!==VC_REFINERY_TAB)throw Error('Pestaña no autorizada.');
+  const sh=ss.getSheetByName(requestedTab);
+  if(!sh)throw Error('No existe la pestaña '+requestedTab+' en la base independiente.');
   const first=sh.getRange(1,1,1,VC_HEADERS.length).getDisplayValues()[0];
-  if(first.some((x,i)=>String(x).trim()!==VC_HEADERS[i]))throw Error('Los encabezados de LISTA_VERIFICADOS no coinciden con el esquema previsto.');
+  if(first.some((x,i)=>String(x).trim()!==VC_HEADERS[i]))throw Error('Los encabezados de '+requestedTab+' no coinciden con el esquema previsto.');
   return sh;
 }
 function vcDate_(value,sheetTimeZone){
@@ -44,8 +48,8 @@ function vcDateDisplayed_(value){
   if(m)return m[3]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2);
   return '';
 }
-function vcRead_(){
-  const sh=vcSheet_(),last=sh.getLastRow();
+function vcRead_(tabName){
+  const sh=vcSheet_(tabName),last=sh.getLastRow();
   if(last<2)return [];
   const sheetTimeZone=sh.getParent().getSpreadsheetTimeZone();
   const values=sh.getRange(2,1,last-1,VC_HEADERS.length).getValues();
@@ -89,12 +93,12 @@ function vcSafeValue_(v){
   // Evitar que un valor procedente de Excel se interprete como fórmula de Google Sheets.
   return /^[=+@]/.test(s.trimStart())?"'"+s:s;
 }
-function vcUpsert_(incoming){
+function vcUpsert_(incoming,tabName){
   if(!Array.isArray(incoming)||!incoming.length)throw Error('El checklist no contiene verificaciones.');
   if(incoming.length>5000)throw Error('Demasiados registros en una sola carga. Divida el archivo.');
   const lock=LockService.getScriptLock();lock.waitLock(30000);
   try{
-    const sh=vcSheet_(),last=sh.getLastRow(),existing=last>1?sh.getRange(2,1,last-1,VC_HEADERS.length).getValues():[];
+    const sh=vcSheet_(tabName),last=sh.getLastRow(),existing=last>1?sh.getRange(2,1,last-1,VC_HEADERS.length).getValues():[];
     const byId=new Map();existing.forEach((r,i)=>{if(String(r[0]||'').trim())byId.set(String(r[0]).trim(),i);});
     const appended=[],updates=[];let added=0,updated=0;const now=new Date();
     incoming.forEach(item=>{
@@ -103,6 +107,7 @@ function vcUpsert_(incoming){
       o.Turno=String(o.Turno||'').trim();
       if(!o['Condicion Fuga']&&o.Fugas)o['Condicion Fuga']=o.Fugas;
       if(!o.Fecha||!o['Área']||!String(o['Punto / Equipo']||'').trim())return;
+      if(tabName===VC_REFINERY_TAB&&!VC_REFINERIES.includes(o['Área']))throw Error('La carga de refinerías contiene un área no permitida.');
       const id=String(o['Registro ID']||[o.Fecha,o.Turno,o['Área'],o['Punto / Equipo']].join('|')).trim();
       o['Registro ID']=id;o['Fecha de carga']=now;
       const row=VC_HEADERS.map(h=>h==='Fecha de carga'?o[h]:vcSafeValue_(o[h]));
@@ -123,6 +128,12 @@ function doPost(e){
     }else if(body.action==='upsert_verified'){
       vcAuthorized_(body.key,'WRITE_KEY');
       result=Object.assign({ok:true,version:VC_VERSION},vcUpsert_(body.rows));
+    }else if(body.action==='read_refineries'){
+      result={ok:true,version:VC_VERSION,rows:vcRead_(VC_REFINERY_TAB),updatedAt:new Date().toISOString()};
+    }else if(body.action==='upsert_refineries'){
+      vcAuthorized_(body.key,'WRITE_KEY');
+      if(!Array.isArray(body.rows)||!body.rows.length||body.rows.some(x=>!x||!VC_REFINERIES.includes(String(x['Área']||'').trim().toUpperCase())))throw Error('La carga debe contener solo registros de DE SMET o TIUNA.');
+      result=Object.assign({ok:true,version:VC_VERSION},vcUpsert_(body.rows,VC_REFINERY_TAB));
     }else throw Error('Acción POST no reconocida.');
   }catch(err){result={ok:false,error:String(err&&err.message||err)};}
   return p.nonce?vcFrame_(result,p.nonce,p.origin):vcJson_(result);
