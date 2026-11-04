@@ -92,3 +92,27 @@
   .sidebar .brand-logo-preinca{height:35px;max-width:37px}
   .sidebar .brand-name{width:auto;flex:1}
 }
+
+
+/* Menú lateral claro: contraste de logos corporativos */
+.sidebar{
+  background:#ffffff;
+  color:#193b52;
+  border-right:1px solid #dbe5ed;
+  box-shadow:2px 0 12px rgba(16,46,69,.045);
+}
+.sidebar .brand-name strong{color:#173b52}
+.sidebar .brand-name small{color:#6c8090}
+.sidebar .side-label{color:#5d7588}
+.sidebar .nav-item{color:#294c62}
+.sidebar .nav-item:hover{background:#f0f6fa;color:#173b52}
+.sidebar .nav-item.active{
+  background:#e6f2fa;
+  color:#125c8d;
+  box-shadow:inset 3px 0 0 #2378af;
+}
+.sidebar .nav-item:focus-visible{outline:2px solid #2378af;outline-offset:2px}
+.sidebar .nav-item .nav-copy small{color:#637c8d}
+.sidebar .nav-item.active .nav-copy small,.sidebar .nav-item:hover .nav-copy small{color:#225e84}
+.sidebar .sidebar-bottom{border-top-color:#dce6ee;color:#687f90}
+.sidebar .sidebar-bottom strong{color:#234f6b}
