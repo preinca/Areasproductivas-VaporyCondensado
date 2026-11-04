@@ -294,7 +294,7 @@
       const isArea=activeArea!=='*',name=isArea?areaLabel(activeArea):'';
       $('view-panel').classList.toggle('area-mode',isArea);
       $('panel-eyebrow').textContent=isArea?'SERVICIOS DE PLANTA / ÁREAS':'SERVICIOS DE PLANTA / INSPECCIONES';
-      $('panel-heading').textContent=isArea?'Área de '+name:'Checklist Vapor y Condensado';
+      $('panel-heading').textContent=isArea?'Área de '+name:'Áreas Productivas/Vapor y Condensado';
       $('panel-description').textContent=isArea?'Verificaciones de vapor y condensado correspondientes al área de '+name+'.':'Seguimiento técnico de condiciones, desviaciones y avisos de mantenimiento.';
       $('panel-title').textContent=isArea?'Resumen de '+name:'Resumen operacional';
       $('history-title').textContent=isArea?'Histórico de '+name:'Histórico de verificaciones';
