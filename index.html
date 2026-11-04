@@ -7,11 +7,11 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="description" content="Verificaciones operativas de vapor y condensado, inspecciones y avisos B1.">
   <title>Checklist Vapor y Condensado | Servicios de Planta</title>
-  <link rel="stylesheet" href="styles.css?v=20261104-refinerias-checklist">
+  <link rel="stylesheet" href="styles.css?v=20261104-referencias-visuales">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
   <script src="config.js" defer></script>
   <script src="app.js?v=20261104-panel-title" defer></script>
-  <script src="refinerias.js?v=20261104-refinerias-checklist" defer></script>
+  <script src="refinerias.js?v=20261104-referencias-visuales" defer></script>
 </head>
 <body>
 <div class="layout">
@@ -114,6 +114,22 @@
           </div>
         </section>
       </section>
+      <section class="content-section refinery-references" id="desmet-referencias" aria-labelledby="desmet-references-title">
+        <div class="section-head">
+          <div><h2 id="desmet-references-title">Referencias visuales</h2><p>Identifique los puntos y equipos de DE SMET mediante sus diagramas técnicos.</p></div>
+        </div>
+        <div class="card reference-card">
+          <div class="filters ref-filters refinery-reference-filters">
+            <label>Punto / equipo<select id="desmet-ref-point" aria-label="Punto o equipo de DE SMET"></select></label>
+            <label>Vista<select id="desmet-ref-mode">
+              <option value="point">Punto / equipo</option>
+              <option value="area">Todos los diagramas de la refinería</option>
+              <option value="hide">Ocultar referencias</option>
+            </select></label>
+          </div>
+          <div id="desmet-reference-content" class="reference-content" aria-live="polite"></div>
+        </div>
+      </section>
       <section class="content-section" aria-labelledby="desmet-diagramas-title">
         <div class="section-head">
           <div>
@@ -209,6 +225,22 @@
             <div class="pager"><span id="tiuna-page-meta">0–0 de 0</span><div><button class="btn subtle" type="button" id="tiuna-prev-page">← Anteriores</button><select id="tiuna-page-select" aria-label="Página del histórico de TIUNA"></select><button class="btn subtle" type="button" id="tiuna-next-page">Siguientes →</button></div></div>
           </div>
         </section>
+      </section>
+      <section class="content-section refinery-references" id="tiuna-referencias" aria-labelledby="tiuna-references-title">
+        <div class="section-head">
+          <div><h2 id="tiuna-references-title">Referencias visuales</h2><p>Identifique los puntos y equipos de TIUNA mediante sus diagramas técnicos.</p></div>
+        </div>
+        <div class="card reference-card">
+          <div class="filters ref-filters refinery-reference-filters">
+            <label>Punto / equipo<select id="tiuna-ref-point" aria-label="Punto o equipo de TIUNA"></select></label>
+            <label>Vista<select id="tiuna-ref-mode">
+              <option value="point">Punto / equipo</option>
+              <option value="area">Todos los diagramas de la refinería</option>
+              <option value="hide">Ocultar referencias</option>
+            </select></label>
+          </div>
+          <div id="tiuna-reference-content" class="reference-content" aria-live="polite"></div>
+        </div>
       </section>
       <section class="content-section" aria-labelledby="tiuna-diagramas-title">
         <div class="section-head">
