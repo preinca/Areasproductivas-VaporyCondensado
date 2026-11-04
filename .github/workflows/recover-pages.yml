@@ -1,0 +1,31 @@
+name: Recuperar publicación de GitHub Pages
+on:
+  push:
+    paths:
+      - '.github/workflows/recover-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+jobs:
+  unlock-and-rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancelar despliegue bloqueado de Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail-with-body --silent --show-error --retry 2 --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/deployments/0c52d608c3d76edf76d65818ddaa48a85857a447/cancel"
+      - name: Solicitar nueva compilación del sitio
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail-with-body --silent --show-error --retry 2 --request POST \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"
