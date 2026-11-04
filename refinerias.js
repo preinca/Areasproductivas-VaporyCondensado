@@ -105,7 +105,7 @@
         </span>
         <span class="refinery-diagram-caption">${esc(title)}</span>
       </a>`).join('');
-    view.innerHTML=heading+(refs.length?`<div class="refinery-diagram-gallery">${cards}</div>`:'<div class="empty">No hay un diagrama asociado a este punto.</div>');
+    view.innerHTML=heading+(refs.length?`<div class="refinery-diagram-gallery ${mode==='point'?'single':'all'}">${cards}</div>`:'<div class="empty">No hay un diagrama asociado a este punto.</div>');
   }
   function render(slug){
     const areaRows=rows.filter(r=>r['Área']===REFINERIES[slug]);

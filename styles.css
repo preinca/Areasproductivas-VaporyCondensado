@@ -147,3 +147,29 @@
 @media(max-width:500px){
   .refinery-view .refinery-references .refinery-reference-filters{grid-template-columns:1fr}
 }
+
+/* Referencias visuales: diagramas centrados y de mayor tamaño */
+.refinery-view .refinery-references .refinery-diagram-gallery.single{
+  width:100%;
+  grid-template-columns:minmax(0,640px);
+  justify-content:center;
+  margin:0 auto;
+}
+.refinery-view .refinery-references .refinery-diagram-gallery.all{
+  width:100%;
+  max-width:1160px;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));
+  justify-content:center;
+  margin:0 auto;
+}
+.refinery-view .refinery-references .refinery-diagram-gallery .refinery-diagram-preview{
+  aspect-ratio:4/3;
+}
+@media(max-width:680px){
+  .refinery-view .refinery-references .refinery-diagram-gallery.single{
+    grid-template-columns:minmax(0,1fr);
+  }
+  .refinery-view .refinery-references .refinery-diagram-gallery.all{
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));
+  }
+}
