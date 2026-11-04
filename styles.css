@@ -116,3 +116,22 @@
 .sidebar .nav-item.active .nav-copy small,.sidebar .nav-item:hover .nav-copy small{color:#225e84}
 .sidebar .sidebar-bottom{border-top-color:#dce6ee;color:#687f90}
 .sidebar .sidebar-bottom strong{color:#234f6b}
+
+/* Checklists independientes por refinería, conservando los diagramas existentes */
+.refinery-view .refinery-checklist{margin-bottom:38px}
+.refinery-view .refinery-checklist .section-head{align-items:center}
+.refinery-view .refinery-checklist .refinery-filters{grid-template-columns:repeat(3,minmax(0,1fr)) minmax(175px,1.45fr)}
+.refinery-view .refinery-checklist .refinery-history{margin-top:30px}
+.refinery-view .refinery-checklist .refinery-history .section-head{align-items:end}
+.refinery-view .refinery-checklist .refinery-history .section-head .buttons{justify-content:flex-end}
+.refinery-view .refinery-checklist .status-pill.error{white-space:normal;max-width:240px}
+@media(max-width:1150px){
+  .refinery-view .refinery-checklist .refinery-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:770px){
+  .refinery-view .refinery-checklist .refinery-history .section-head .buttons{justify-content:flex-start}
+}
+@media(max-width:500px){
+  .refinery-view .refinery-checklist .refinery-filters{grid-template-columns:1fr}
+  .refinery-view .refinery-checklist .refinery-filters .search-field{grid-column:span 1}
+}
