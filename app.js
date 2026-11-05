@@ -6,11 +6,11 @@
   const FIELDS=['Condicion Fuga','Condicion by pass','Condicion Manometros','Condicion Aislamiento','Condicion Seguridad'];
   const HEADERS=['Registro ID','Fecha','Turno','Supervisor','Operador','Área','Punto / Equipo',...FIELDS,'#Aviso B1','Observacion Operador','Archivo origen','Fecha de carga'];
   const ORDER={
-    QUESO:['Linea Alimentacion','Linea Cocina 1','Linea Vapor Alimentacion','Linea de condensado #1 entrada vapor','Linea de condensado #2 Filtro','Linea de condensado #3 Cocina','Linea Cocina 2','Intercambiador CIP','Fase Oleosa','Tina de fundicion','Tapadora'],
-    TOMATE:['Intercambiador de Calor','Intercambiador Tubular Salsa Base'],
+    QUESO:['Linea Alimentacion','Linea Cocina 1','Linea Vapor Alimentacion','Linea de condensado #1 entrada vapor','Linea de condensado #2 Filtro','Linea de condensado #3 Cocina','Linea Cocina 2','Intercambiador CIP','Fase Oleosa','Tina de fundicion','Tapadora','Manifold Vapor Investigacion y Desarrollo'],
+    TOMATE:['Intercambiador de Calor','Intercambiador Tubular Salsa Base','Manifold Vapor Investigacion y Desarrollo'],
     MAYONESA:['CIP','Manifold'],
-    MANIFOLD:['Vapor Principal','Vapor Pick Heater','Manifold Vapor Investigacion y Desarrollo','Manifold Vapor Margarina'],
-    MARGARINA:['Area de Pasteurizacion','Area de Fundicion de Emulsificante']
+    MANIFOLD:['Vapor Principal'],
+    MARGARINA:['Area de Pasteurizacion','Area de Fundicion de Emulsificante','Manifold Vapor Margarina','Vapor Pick Heater']
   };
   const PHOTOS=[
     ['QUESO','Linea Alimentacion','queso_linea_alimentacion.jpg','Queso · Línea Alimentación'],
@@ -33,9 +33,10 @@
     ['MAYONESA','CIP','mayonesa_cip.jpg','Mayonesa · CIP'],
     ['MAYONESA','Manifold','mayonesa_manifold.jpg','Mayonesa · Manifold'],
     ['MANIFOLD','Vapor Principal','manifold_vapor_principal.jpg','Manifold · Vapor Principal'],
-    ['MANIFOLD','Manifold Vapor Margarina','manifold_vapor_margarina.jpg','Manifold · Vapor Margarina'],
-    ['MANIFOLD','Vapor Pick Heater','manifold_pick_heater.jpg','Manifold · Pick Heater'],
-    ['MANIFOLD','Manifold Vapor Investigacion y Desarrollo','manifold_investigacion_desarrollo.jpg','Manifold · Investigación y Desarrollo'],
+    ['QUESO','Manifold Vapor Investigacion y Desarrollo','manifold_investigacion_desarrollo.jpg','Queso · Investigación y Desarrollo'],
+    ['TOMATE','Manifold Vapor Investigacion y Desarrollo','manifold_investigacion_desarrollo.jpg','Tomate · Investigación y Desarrollo'],
+    ['MARGARINA','Manifold Vapor Margarina','manifold_vapor_margarina.jpg','Margarina · Vapor Margarina'],
+    ['MARGARINA','Vapor Pick Heater','manifold_pick_heater.jpg','Margarina · Pick Heater'],
     ['MARGARINA','Area de Pasteurizacion','margarina_pasteurizacion_1.jpg','Margarina · Pasteurización · 1'],
     ['MARGARINA','Area de Pasteurizacion','margarina_pasteurizacion_2.jpg','Margarina · Pasteurización · 2'],
     ['MARGARINA','Area de Pasteurizacion','margarina_pasteurizacion_3.jpg','Margarina · Pasteurización · 3'],
